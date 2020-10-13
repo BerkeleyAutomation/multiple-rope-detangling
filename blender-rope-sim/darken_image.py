@@ -7,7 +7,7 @@ from shutil import copyfile
 import json
 
 def darken_image(img, filename):
-	M = np.ones(img.shape, dtype="uint8") * 125
+	M = np.ones(img.shape, dtype="uint8") * 115
 	subtracted=cv2.subtract(img,M)
 	cv2.imwrite('./dr_data/dark_val2017/{}'.format(filename), subtracted)
 
