@@ -13,7 +13,6 @@ def blackout(idx, version, kpt_dir):
 	img = cv2.imread('render_kpts_output/extracted_images/{}'.format(image_filename))
 	vis = img.copy()
 	kpts = np.load('%s/%05d_%01d.npy'%(kpt_dir, idx, version))
-	kpts = np.reshape(kpts, (1,2))
 	for i, (u,v) in enumerate(kpts):  
 		#randomize the dropout shapes, sizes, and rotations 
 		rect_or_circle = randint(0,1) 
@@ -23,16 +22,6 @@ def blackout(idx, version, kpt_dir):
 			P0 = (u,v-5)
 			rr = RRect(P0,(W,H),ang)
 			rr.draw(vis)
-			# rectangle_vertices = rr.verts
-			# print(rectangle_vertices)
-			# rectangle_vertices = np.array(rectangle_vertices, dtype=np.float32)
-			# print(rectangle_vertices)
-			# rectangle_vertices = cv2.UMat(rectangle_vertices)
-			# print(rectangle_vertices)
-			# vis = np.array(vis, dtype=np.float32)
-			# vis = cv2.UMat(vis)
-			# cv2.drawContours(vis, rectangle_vertices, -1, (0,0,0), -1)
-			#cv2.rectangle(vis,(u-10,v-12),(u+7,v+8),(0,0,0),-1)
 		else:
 			cv2.circle(vis,(u,v),12,(0,0,0), -1)
 	blacked_out_filename = "{0:05d}_{1:01d}_blacked_out.png".format(idx, version)
@@ -59,8 +48,6 @@ class RRect:
 		for i in range(len(self.verts)-1):
 			cv2.line(image, (self.verts[i][0], self.verts[i][1]), (self.verts[i+1][0],self.verts[i+1][1]), (0,0,0), 9)
 		cv2.line(image, (self.verts[3][0], self.verts[3][1]), (self.verts[0][0], self.verts[0][1]), (0,0,0), 9)
-
-
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()

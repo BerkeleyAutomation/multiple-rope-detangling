@@ -28,11 +28,11 @@ def crop_at_point(img, x, y, width=640, height=480):
 
 
 if __name__ == '__main__':
-	input_pre = './real_images/original/'
-	folder = 'overhead_hairtie'
+	input_pre = './real_images/'
+	folder = 'hairtie'
 	input_folder = input_pre + folder
-	output_pre = './real_images/cropped/'
-	output_folder = output_pre + folder + '_resized'
+	#output_pre = './real_images/cropped/'
+	output_folder = folder + '_resized'
 	if not os.path.exists(output_folder):
 		os.mkdir(output_folder)
 	for f in os.listdir(input_folder):
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 		#resized, _, _ = crop_and_resize(img, aspect=(286,286))
 		#resized = crop_at_point(img, 740, 200, width=480, height=480)
 		#resized = crop_at_point(img, 700, 200, width=640, height=480)
-		resized = crop_at_point(img, 700, 350, width=450, height=400)
+		resized = crop_at_point(img, 850, 275, width=400, height=350)
 		resized = cv2.resize(resized, (640,480))
 		cv2.imwrite(os.path.join(output_folder, f), resized)
 		#cv2.imshow('resized', resized)

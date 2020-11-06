@@ -145,12 +145,59 @@ def annotate(frame, offset=4, num_knots=1):
         
     save_kpts(frame, 0, annotations)
 
+def annotate_multiple_black_out(frame, offset=4, num_knots=1):
+    #TODO
+    pull_idx_actual, hold_idx_actual, _ = find_knot(last) 
+    knot_point_min = min(pull_idx_actual, hold_idx_actual)
+    knot_point_max = max(pull_idx_actual, hold_idx_actual)
+    annotations = []
 
-def annotate_black_out_knot(frame, offset=4, num_knots=1):
+    # generate a random amount of blackout locations
+    for j in range(3):
+        if j == 0: #no blackouts at all
+            save_black_out_pixels(frame, 0, [[0,0]])
+            hold_idx = hold_idx_actual
+            pull_idx = pull_idx_actual
+            indices = [0, pull_idx, hold_idx, last-1]
+            annotations = calculate_x_y_pixels(indices)
+            save_kpts(frame, j, annotations)
+            continue
+        if j == 1: #possinle blackout before knot point
+            num_dropouts = np.random.randint(2, high = 10)
+            cylinders_to_drop = np.random.randint(0, 50, num_dropouts)
+        if j == 2: #black out only after knot point
+            num_dropouts = np.random.randint(2, high = 10)
+            cylinders_to_drop = np.random.randint(knot_point_max + 1, 50, num_dropouts) #make this maximum not minimum
+        # reorder them in numerical order
+        cylinders_to_drop = np.sort(cylinders_to_drop)
+        print(cylinders_to_drop)
+        # pick the smallest capsule index and check where it is relative to the knot_point
+        right_most_cyl = cylinders_to_drop[0]
+        # if equal disregard this point and pick the next smallest
+        if right_most_cyl == knot_point_min or right_most_cyl == knot_point_max:
+            cylinders_to_drop = cylinders_to_drop[1:]
+            right_most_cyl = cylinders_to_drop[0]
+        # if less than, save black out pixels with updated pull and hold
+        if right_most_cyl < knot_point_min:
+            hold_idx = right_most_cyl
+            pull_idx = hold_idx + 2
+        # if greater than, save black out pixels with original pull and hold
+        elif right_most_cyl > knot_point_max:
+            hold_idx = hold_idx_actual
+            pull_idx = pull_idx_actual
+
+        save_black_out_pixels(frame, j, calculate_x_y_pixels(cylinders_to_drop))
+        indices = [0, pull_idx, hold_idx, last-1]
+        annotations = calculate_x_y_pixels(indices)
+        save_kpts(frame, j, annotations)
+
+
+def annotate_black_out_knot(frame, offset=4, num_knots=1): #one blackout at a time
     pull_idx_actual, hold_idx_actual, _ = find_knot(last) 
     knot_point = min(pull_idx_actual, hold_idx_actual)
+    annotations = []
 
-    for j in range(3):
+    for j in range(3): 
         if j==1:
             #move to a point before the knot so update pull and hold
             if (0 >= knot_point-1):
@@ -168,10 +215,9 @@ def annotate_black_out_knot(frame, offset=4, num_knots=1):
         if j==1: #early crossing and hold pixel
             indices = [hold_idx]
             save_black_out_pixels(frame, 1, calculate_x_y_pixels(indices))
-        elif j==0:
+        elif j==0: #no crossing
             save_black_out_pixels(frame, 0, [[0,0]])
-        elif j==2:
-            #calculate an x and y for 
+        elif j==2: #crossing after
             if (knot_point+1) == 48:
                 hold_idx = 48
             else:
@@ -295,7 +341,8 @@ def render_frame(frame, render_offset=0, step=10, filename="%05d_%01d.jpg", fold
             bpy.ops.render.render(write_still=True)
         if annot:
             #annotate(index) 
-            annotate_black_out_knot(index)
+            #annotate_black_out_knot(index)
+            annotate_multiple_black_out(index)
 
 def render_mask(frame, render_offset=0, step=10, mask_filename="%05d.jpg", depth_filename="%05d.jpg", folder_mask="render_kpts_output/image_masks", folder_depth="render_kpts_output/image_depths"):
     # NOTE: this method is still in progress
@@ -480,7 +527,7 @@ if __name__ == '__main__':
     set_render_settings(params["engine"],(params["render_width"],params["render_height"]))
     make_table(params)
     start = time.time()
-    iters = 125 #20
+    iters = 15 #125
     generate_dataset(iters, params, render=True)
     end = time.time()
     print("time", end-start)
