@@ -527,7 +527,7 @@ if __name__ == '__main__':
     set_render_settings(params["engine"],(params["render_width"],params["render_height"]))
     make_table(params)
     start = time.time()
-    iters = 15 #125
+    iters = 90 #15
     generate_dataset(iters, params, render=True)
     end = time.time()
     print("time", end-start)

@@ -6,7 +6,7 @@ import numpy as np
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--dir', type=str, default='train_sets/multiple_blackout/test')
+    parser.add_argument('-d', '--dir', type=str, default='train_sets/multiple_blackout/train')
     args = parser.parse_args()
     if os.path.exists('./reordered'):
         os.system('rm -r ./reordered')
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     os.mkdir('./reordered/keypoints')
 # 
     i = 0
-    dir_len = len(os.listdir('train_sets/multiple_blackout/test/blacked_out'))
+    dir_len = len(os.listdir('train_sets/multiple_blackout/train/blacked_out'))
     for l in range(dir_len//3):
         for j in range(3):
             filename = "%05d_%01d_blacked_out.png"%(l,j)
