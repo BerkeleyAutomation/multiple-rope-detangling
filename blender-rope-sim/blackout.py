@@ -17,8 +17,8 @@ def blackout(idx, version, kpt_dir):
 		#randomize the dropout shapes, sizes, and rotations 
 		rect_or_circle = randint(0,1) 
 		if rect_or_circle:
-			(W,H) = (10,15)
-			ang = randint(-60, 60)
+			(W,H) = (10,40)
+			ang = randint(-80, 80)
 			P0 = (u,v-5)
 			rr = RRect(P0,(W,H),ang)
 			rr.draw(vis)
