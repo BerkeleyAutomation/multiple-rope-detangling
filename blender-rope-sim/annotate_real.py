@@ -8,7 +8,7 @@ class KeypointsAnnotator:
 
     def load_image(self, img):
         self.img = img
-        self.click_to_kpt = {0:"L", 1:"PULL", 2:"PIN", 3:"R"}
+        self.click_to_kpt = {0:"R", 1:"PULL", 2:"PIN", 3:"L"}
 
     def mouse_callback(self, event, x, y, flags, param):
         cv2.imshow("pixel_selector", self.img)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_fabric_resized'
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_resized'
 
-    image_dir = './real_images/two_hairties_train_images' # Should have images like 00000.jpg, 00001.jpg, ...
+    image_dir = './real_images/multiple_rope_train_images' # Should have images like 00000.jpg, 00001.jpg, ...
     output_dir = './real_data' # Will have real_data/images and real_data/keypoints
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)

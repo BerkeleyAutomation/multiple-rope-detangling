@@ -56,7 +56,7 @@ BBOX_AUGS = KPT_AUGS[:-1] + [
         iaa.flip.Fliplr(0.5),
         sometimes(iaa.Affine(
                 scale={"x": (0.8, 1.2), "y": (0.8, 1.2)}, # scale images to 80-120% of their size, individually per axis
-                translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)}, # translate by -20 to +20 percent (per axis)
+                translate_percent={"x": (-0.1, 0.1), "y": (-0.1, 0.1)}, # translate by -20 to +20 percent (per axis)
                 order=[0, 1], # use nearest neighbour or bilinear interpolation (fast)
                 cval=(30, 60), # if mode is constant, use a cval between 0 and 255
                 mode=ia.ALL # use any of scikit-image's warping modes (see 2nd image from the top for examples)
@@ -117,9 +117,9 @@ def augment(img, keypoints, output_dir_img, output_dir_kpt, new_idx, show=False,
         cv2.imshow("img", img_aug)
         cv2.waitKey(0)
 
-    cv2.imwrite(os.path.join(output_dir_img, "%05d.jpg"%new_idx), img_aug)
+    cv2.imwrite(os.path.join(output_dir_img, "%05d.png"%new_idx), img_aug)
     if depth_img is not None:
-        cv2.imwrite(os.path.join(depth_output_dir_img, "%05d.jpg"%new_idx), depth_img_aug)
+        cv2.imwrite(os.path.join(depth_output_dir_img, "%05d.png"%new_idx), depth_img_aug)
     if mode == 'kpt':
         np.save(os.path.join(output_dir_kpt, "%05d.npy"%new_idx), kps_aug)
     else: # BBOX
@@ -144,7 +144,7 @@ if __name__ == '__main__':
     idx = len(os.listdir(img_dir))
     #idx = 0
     orig_len = len(os.listdir(img_dir))
-    num_augs_per = 5
+    num_augs_per = 35
     mode = 'kpt'
     output_dir_annots = keypoints_dir if mode =='kpt' else bbox_dir
     if mode == 'bbox':
