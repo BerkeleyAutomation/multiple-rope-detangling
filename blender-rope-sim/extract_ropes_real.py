@@ -44,7 +44,9 @@ def red_rope(image, filename):
 	# num = int(file[5:])
 	# print(num)
 	# filename = 'color%d.png'%(num+19)
-	cv2.imwrite('{}'.format(filename), img4)
+	gray_img = cv2.cvtColor(img4, cv2.COLOR_BGR2GRAY)
+	if cv2.countNonZero(gray_img) != 0:
+		cv2.imwrite('{}'.format(filename), img4)
 
 
 def white_rope(img, filename):
@@ -56,22 +58,51 @@ def white_rope(img, filename):
 	if cv2.countNonZero(gray_img) != 0:
 		cv2.imwrite('{}'.format(filename), img)
 
+def shadow_mask_white(img, filename):
+	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+	_, mask = cv2.threshold(gray,130,255,cv2.THRESH_BINARY)
+	cv2.imwrite('{}'.format(filename), mask)
+
+def shadow_mask_red(img, filename):
+	hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+
+	#lower red
+	lower_red = np.array([0,50,50])
+	upper_red = np.array([10,255,255])
+
+	#upper red
+	lower_red2 = np.array([170,50,50])
+	upper_red2 = np.array([180,255,255])
+
+	mask = cv2.inRange(hsv, lower_red, upper_red)
+	res = cv2.bitwise_and(image, image, mask= mask)
+
+
+	mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
+	res2 = cv2.bitwise_and(image, image, mask= mask2)
+
+	mask_end = cv2.add(mask, mask2)
+
 
 if __name__ == '__main__':
-	folder = './real_images/hairtie_resized'
+	folder = './real_images/two_hairties_resized'
+	shadows = './real_images/two_hairties_shadows'
 	output_folder = folder + '_extract'
 	if not os.path.exists(output_folder):
 		os.mkdir(output_folder)
+	if not os.path.exists(shadows):
+		os.mkdir(shadows)
 	for f in os.listdir(folder):
 		if f != '.DS_Store':
 			img = cv2.imread(os.path.join(folder, f))
 			splits = f.split('.')
 			file = splits[0]
-			num = int(file[5:])
+			num = int(file)
 			print(num)
-			filename = 'color%d.png'%(num+19)
-			red_rope(img, os.path.join(output_folder, filename))
-			white_rope(img, os.path.join(output_folder, f))
+			# filename = 'color%d.png'%(num+97)
+			# red_rope(img, os.path.join(output_folder, filename))
+			# white_rope(img, os.path.join(output_folder, f))
+			shadow_mask_white(img, os.path.join(shadows,f))
 
 
 
