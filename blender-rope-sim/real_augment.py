@@ -144,22 +144,23 @@ if __name__ == '__main__':
     idx = len(os.listdir(img_dir))
     #idx = 0
     orig_len = len(os.listdir(img_dir))
-    num_augs_per = 35
+    num_augs_per = 10
     mode = 'kpt'
     output_dir_annots = keypoints_dir if mode =='kpt' else bbox_dir
     if mode == 'bbox':
         for i in range(orig_len):
-            img = cv2.imread(os.path.join(img_dir, '%05d.jpg'%i))
+            img = cv2.imread(os.path.join(img_dir, '%05d.png'%i))
             kpts = np.load(os.path.join(keypoints_dir, '%05d.npy'%i))
             xml_filename = os.path.join(output_dir_annots, '%05d.xml'%i)
             process_bbox_annots(xml_filename, kpts)
     for i in range(orig_len):
         print(i, orig_len)
-        img = cv2.imread(os.path.join(img_dir, '%05d.jpg'%i))
+        img = cv2.imread(os.path.join(img_dir, '%05d.png'%i))
         #depth_img = cv2.imread(os.path.join(depth_img_dir, '%05d.jpg'%i))
         kpts = np.load(os.path.join(keypoints_dir, '%05d.npy'%i))
         for _ in range(num_augs_per):
-            #augment(img, kpts, output_dir_img, output_dir_annots, idx+i, show=False, mode=mode, depth_img=depth_img, depth_output_dir_img=depth_output_dir_img)
+            #augment(img, kpts, output_dir_img, output_dir_annots, idx+i, show=False, 
+            #mode=mode, depth_img=depth_img, depth_output_dir_img=depth_output_dir_img)
             augment(img, kpts, output_dir_img, output_dir_annots, idx+i, show=False, mode=mode)
             idx += 1
         idx -= 1

@@ -99,10 +99,9 @@ if __name__ == '__main__':
 			file = splits[0]
 			num = int(file)
 			print(num)
-			# filename = 'color%d.png'%(num+97)
-			# red_rope(img, os.path.join(output_folder, filename))
-			# white_rope(img, os.path.join(output_folder, f))
-			shadow_mask_white(img, os.path.join(shadows,f))
+			filename = 'color%d.png'%(num + len(os.listdir(folder)))
+			red_rope(img, os.path.join(output_folder, filename))
+			white_rope(img, os.path.join(output_folder, f))
 
 
 
