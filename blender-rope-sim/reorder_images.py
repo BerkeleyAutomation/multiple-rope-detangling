@@ -21,6 +21,6 @@ if __name__ == '__main__':
         f = "out%04d.npy"%(j+1)
         save_img_filename = "%05d.npy"%(i)
         print("Relabeling " + save_img_filename)
-        img = np.load('%s/%s'%(args.dir, f)).copy()
-        np.save('./test_results/two_hairties_ep_5000/preds_4c_reordered/%s'%(save_img_filename), img)
+        img = cv2.imread('%s/%s'%(args.dir, f)).copy()
+        cv2.imwrite('./real_data/images_reordered/%s'%(save_img_filename), img)
         i += 1
