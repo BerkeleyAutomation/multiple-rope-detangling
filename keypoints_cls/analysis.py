@@ -16,7 +16,7 @@ import numpy as np
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
 #keypoints.load_state_dict(torch.load('checkpoints/dr_braid_varied/model_2_1_5_0.0026437892680103254.pth'))
-keypoints.load_state_dict(torch.load('checkpoints/black_out_simple_GAUSS_KPTS_ONLY/model_2_1_6_0.003018017431239951.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/mult_real_ep/model_2_1_6_0.0024286683254231708.pth'))
 #keypoints.load_state_dict(torch.load('checkpoints/undo_reid_termGAUSS_KPTS_ONLY/model_2_1_4_0.003552900240372758.pth'))
 
 #keypoints.load_state_dict(torch.load('checkpoints/undo_reid_term/model_2_1_13.pth'))
@@ -39,7 +39,7 @@ transform = transform = transforms.Compose([
 #image_dir = 'data/global_cable/images'
 #image_dir = 'data/undo_reid_term_braid/test/images'
 #image_dir = 'data/undo_reid_term_capsule/test/images'
-image_dir = 'data/black_out_simple/test/blacked_out'
+image_dir = 'data/two_hairties_train'
 #image_dir = 'data/real_braid_1'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
@@ -51,7 +51,7 @@ for i, f in enumerate(sorted(os.listdir(image_dir))):
     # GAUSS
     heatmap = prediction.predict(img_t)
     heatmap = heatmap.detach().cpu().numpy()
-    prediction.plot(img, heatmap, image_id=i)
+    prediction.plot_one_endpoint(img, heatmap, image_id=i)
  
     #heatmap, cls = prediction.predict(img_t)
     #cls = torch.argmax(cls).item()
