@@ -6,7 +6,7 @@ import numpy as np
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--dir', type=str, default='/raid/vainavi/data/multiple-rope/two_hairties_pp/train/blacked_out')
+    parser.add_argument('-d', '--dir', type=str, default='./test_results/two_hairties_ep_5000/preds_4c')
     args = parser.parse_args()
     reordered_folder = args.dir + '_reordered'
     print(reordered_folder)
@@ -18,8 +18,8 @@ if __name__ == '__main__':
     i = 0
     # dir_len = len(os.listdir('train_sets/multiple_blackout/train/blacked_out'))
     for j in range(len(os.listdir(args.dir))):
-        f = "%05d.png"%(j+1)
-        save_img_filename = "%05d.png"%(i)
+        f = "out%04d.npy"%(j+1)
+        save_img_filename = "%05d.npy"%(i)
         print("Relabeling " + save_img_filename)
         img = cv2.imread('%s/%s'%(args.dir, f)).copy()
         cv2.imwrite('/raid/vainavi/data/multiple-rope/two_hairties_pp/train/blacked_out_reordered/%s'%(save_img_filename), img)
