@@ -19,11 +19,6 @@ keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_W
 keypoints.load_state_dict(torch.load('checkpoints/mult_real_ep/model_2_1_6_0.0024286683254231708.pth'))
 #keypoints.load_state_dict(torch.load('checkpoints/undo_reid_termGAUSS_KPTS_ONLY/model_2_1_4_0.003552900240372758.pth'))
 
-#keypoints.load_state_dict(torch.load('checkpoints/undo_reid_term/model_2_1_13.pth'))
-#keypoints.load_state_dict(torch.load('checkpoints/undo_reid_term/model_2_1_14.pth'))
-#keypoints.load_state_dict(torch.load('checkpoints/undo_reid_term_braid_GAUSS_KPTS_ONLY/model_2_1_4_0.003553322965173738.pth'))
-#keypoints.load_state_dict(torch.load('checkpoints/undo_reid_term_capsule_GAUSS_KPTS_ONLY/model_2_1_4_0.0032973564452098247.pth'))
-
 # cuda
 use_cuda = torch.cuda.is_available()
 #use_cuda = False
@@ -39,11 +34,13 @@ transform = transform = transforms.Compose([
 #image_dir = 'data/global_cable/images'
 #image_dir = 'data/undo_reid_term_braid/test/images'
 #image_dir = 'data/undo_reid_term_capsule/test/images'
-image_dir = 'data/two_hairties_train'
+image_dir = 'data/two_hairties_pp_train_imgs'
 #image_dir = 'data/real_braid_1'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
+    print(f)
     img = cv2.imread(os.path.join(image_dir, f))
+    print(img)
     #dim = (640,480)
     #img = cv2.resize(img,dim) 
     img_t = transform(img)

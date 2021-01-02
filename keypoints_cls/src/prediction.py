@@ -93,5 +93,5 @@ class Prediction:
             label = classes[cls]
             cv2.putText(result, label, (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.imwrite('preds/%05d.png'%image_id, result)
-        image = np.dstack(img, heat)
+        image = np.dstack((img, heat))
         np.save('preds_4c/%05d.npy'%image_id, image)
