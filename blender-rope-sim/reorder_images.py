@@ -6,7 +6,7 @@ import numpy as np
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--dir', type=str, default='./real_data/images')
+    parser.add_argument('-d', '--dir', type=str, default='/raid/vainavi/data/multiple-rope/two_hairties_pp/train/blacked_out')
     args = parser.parse_args()
     reordered_folder = args.dir + '_reordered'
     print(reordered_folder)
@@ -22,5 +22,5 @@ if __name__ == '__main__':
         save_img_filename = "%05d.png"%(i)
         print("Relabeling " + save_img_filename)
         img = cv2.imread('%s/%s'%(args.dir, f)).copy()
-        cv2.imwrite('./real_data/images_reordered/%s'%(save_img_filename), img)
+        cv2.imwrite('/raid/vainavi/data/multiple-rope/two_hairties_pp/train/blacked_out_reordered/%s'%(save_img_filename), img)
         i += 1
