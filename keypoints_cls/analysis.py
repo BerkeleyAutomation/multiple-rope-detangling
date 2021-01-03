@@ -34,13 +34,11 @@ transform = transform = transforms.Compose([
 #image_dir = 'data/global_cable/images'
 #image_dir = 'data/undo_reid_term_braid/test/images'
 #image_dir = 'data/undo_reid_term_capsule/test/images'
-image_dir = 'data/two_hairties_pp_train_imgs'
+image_dir = 'data/two_hairties_pp_no_single/test/two_hairties_pp_test_imgs'
 #image_dir = 'data/real_braid_1'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
-    print(f)
     img = cv2.imread(os.path.join(image_dir, f))
-    print(img)
     #dim = (640,480)
     #img = cv2.resize(img,dim) 
     img_t = transform(img)
