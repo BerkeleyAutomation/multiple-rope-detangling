@@ -34,7 +34,7 @@ transform = transform = transforms.Compose([
 #image_dir = 'data/global_cable/images'
 #image_dir = 'data/undo_reid_term_braid/test/images'
 #image_dir = 'data/undo_reid_term_capsule/test/images'
-image_dir = 'data/two_hairties_pp_no_single/test/two_hairties_pp_test_imgs'
+image_dir = 'data/two_hairties_iphone_train'
 #image_dir = 'data/real_braid_1'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
