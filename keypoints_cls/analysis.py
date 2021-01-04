@@ -29,7 +29,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/two_hairties_iphone_train'
+image_dir = 'data/two_hairties_iphone_train_4c'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
     img = np.load(os.path.join(image_dir, f), allow_pickle=True)
