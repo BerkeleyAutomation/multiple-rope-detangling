@@ -49,9 +49,11 @@ def fit(train_data, test_data, model, epochs, checkpoint_path = ''):
 
 # dataset
 workers=0
-dataset_dir = 'two_hairties_pp_no_single'
+raid_dir = 'train_sets'
+dir_name = 'two_hairties_pp_home'
+dataset_dir = raid_dir + '/' + dir_name
 output_dir = 'checkpoints'
-save_dir = os.path.join(output_dir, dataset_dir)
+save_dir = os.path.join(output_dir, dir_name)
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
