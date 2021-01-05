@@ -16,7 +16,7 @@ import numpy as np
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
 #keypoints.load_state_dict(torch.load('checkpoints/dr_braid_varied/model_2_1_5_0.0026437892680103254.pth'))
-keypoints.load_state_dict(torch.load('checkpoints/mult_real_ep/model_2_1_6_0.0024286683254231708.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/two_hairties_ep_home_GAUSS_KPTS_ONLY/model_2_1_4_0.0032886856630272823.pth'))
 #keypoints.load_state_dict(torch.load('checkpoints/undo_reid_termGAUSS_KPTS_ONLY/model_2_1_4_0.003552900240372758.pth'))
 
 # cuda
@@ -34,7 +34,7 @@ transform = transform = transforms.Compose([
 #image_dir = 'data/global_cable/images'
 #image_dir = 'data/undo_reid_term_braid/test/images'
 #image_dir = 'data/undo_reid_term_capsule/test/images'
-image_dir = 'data/two_hairties_iphone_train'
+image_dir = 'data/train_sets/two_hairties_pp_home/test/images'
 #image_dir = 'data/real_braid_1'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
