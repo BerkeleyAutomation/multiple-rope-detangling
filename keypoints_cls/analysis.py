@@ -15,7 +15,7 @@ import numpy as np
 
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/two_hairties_pp_home/model_2_1_8_0.004270573787445776.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/two_hairties_pp_home_4/model_2_1_12_0.004335850384069794.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -29,7 +29,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/train_sets/two_hairties_pp_home/test/blacked_out'
+image_dir = 'data/train_sets/two_hairties_pp_home_4/test/blacked_out'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
     img = np.load(os.path.join(image_dir, f), allow_pickle=True)
