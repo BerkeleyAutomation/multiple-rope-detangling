@@ -50,7 +50,7 @@ def fit(train_data, test_data, model, epochs, checkpoint_path = ''):
 # dataset
 workers=0
 raid_dir = 'train_sets'
-dir_name = 'two_hairties_ep_home_3'
+dir_name = 'two_hairties_ep_5'
 dataset_dir = raid_dir + '/' + dir_name
 output_dir = 'checkpoints'
 save_dir = os.path.join(output_dir, dir_name +'_GAUSS_KPTS_ONLY')

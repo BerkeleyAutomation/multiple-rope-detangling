@@ -72,6 +72,7 @@ class Prediction:
         max_x = 0
         min_y = 480
         heat = heatmap[0][0]
+        #i = np.random.randint(0, high=self.num_keypoints)
         for i in range(self.num_keypoints):
             h = heatmap[0][i]
             tmp = self.expectation(h)

@@ -17,9 +17,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-#keypoints.load_state_dict(torch.load('checkpoints/dr_braid_varied/model_2_1_5_0.0026437892680103254.pth'))
-keypoints.load_state_dict(torch.load('checkpoints/two_hairties_ep_home_3_GAUSS_KPTS_ONLY/model_2_1_4_0.0028477227005818864.pth'))
-#keypoints.load_state_dict(torch.load('checkpoints/undo_reid_termGAUSS_KPTS_ONLY/model_2_1_4_0.003552900240372758.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/two_hairties_ep_5_GAUSS_KPTS_ONLY/model_2_1_6_0.003261065595419683.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -35,11 +33,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-#image_dir = 'data/global_cable/images'
-#image_dir = 'data/undo_reid_term_braid/test/images'
-#image_dir = 'data/undo_reid_term_capsule/test/images'
-image_dir = 'data/train_sets/two_hairties_pp_home_4/test/images'
-#image_dir = 'data/real_braid_1'
+image_dir = 'data/train_sets/two_hairties_pp_right_5/train/images'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
     img = cv2.imread(os.path.join(image_dir, f))
