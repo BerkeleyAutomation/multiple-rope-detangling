@@ -38,11 +38,17 @@ class Prediction:
         exp_val = [int(np.dot(d_norm, x_indices)), int(np.dot(d_norm, y_indices))]
         return exp_val
     
-    def plot(self, img, heatmap, image_id=0, cls=None, classes=None):
+    def plot(self, input, heatmap, image_id=0, cls=None, classes=None):
+        input = np.transpose(input[0], (1,2,0))
+        img = input[:, :, :3] * 255
+        img = img.astype(np.uint8)
         print("Running inferences on image: %d"%image_id)
         all_overlays = []
-        for i in range(self.num_keypoints):
-            h = heatmap[0][i]
+        for i in range(self.num_keypoints+1):
+            if i == self.num_keypoints:	
+                h = input[:, :, 3]
+            else:
+                h = heatmap[0][i]
             tmp = self.expectation(h)
             pred_y, pred_x = np.unravel_index(h.argmax(), h.shape)
             vis = cv2.normalize(h, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
@@ -54,45 +60,14 @@ class Prediction:
             overlay = cv2.addWeighted(img, 0.65, vis, 0.35, 0)
             overlay = cv2.circle(overlay, (pred_x,pred_y), 4, (0,0,0), -1)
             all_overlays.append(overlay)
-        result1 = cv2.vconcat(all_overlays[:self.num_keypoints//2])
-        result2 = cv2.vconcat(all_overlays[self.num_keypoints//2:])
-        result = cv2.hconcat((result1, result2))
-        #cv2.putText(result, "Right Endpoint", (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        result = cv2.vconcat(all_overlays[::-1])#[:self.num_keypoints//2])
+        #result2 = cv2.vconcat(all_overlays[self.num_keypoints//2:])
+        #result = cv2.hconcat((result1, result2))
+        cv2.putText(result, "Given Endpoint", (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         #cv2.putText(result, "Left Endpoint", (650, 490), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        #cv2.putText(result, "Hold", (650, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        #cv2.putText(result, "Pull", (10, 490), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(result, "Pin", (10, 510), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(result, "Pull", (10, 1010), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         if cls is not None:
             label = classes[cls]
             cv2.putText(result, label, (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.imwrite('preds/out%04d.png'%image_id, result)
-
-    def plot_one_endpoint(self, img, heatmap, image_id=0, cls=None, classes=None):
-        print("Running inferences on image: %d"%image_id)
-        all_overlays = []
-        max_x = 0
-        min_y = 480
-        heat = heatmap[0][0]
-        #i = np.random.randint(0, high=self.num_keypoints)
-        for i in range(self.num_keypoints):
-            h = heatmap[0][i]
-            tmp = self.expectation(h)
-            pred_y, pred_x = np.unravel_index(h.argmax(), h.shape)
-            if pred_x > max_x and pred_y < min_y:
-                max_x = pred_x
-                min_y = pred_y 
-                heat = h
-        vis = cv2.normalize(heat, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
-        vis = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
-        result = cv2.addWeighted(img, 0.65, vis, 0.35, 0)
-        result = cv2.circle(result, (max_x,min_y), 4, (0,0,0), -1)
-        #all_overlays.append(overlay)
-        #result1 = cv2.vconcat(all_overlays[:self.num_keypoints//2])
-        #result2 = cv2.vconcat(all_overlays[self.num_keypoints//2:])
-        #result = cv2.hconcat((result1, result2))
-        #cv2.putText(result)
-        if cls is not None:
-            label = classes[cls]
-            cv2.putText(result, label, (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        cv2.imwrite('preds/%05d.png'%image_id, result)
-        image = np.dstack((img, heat))
-        np.save('preds_4c/%05d.npy'%image_id, image)
