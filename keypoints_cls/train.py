@@ -13,7 +13,7 @@ from src.dataset import KeypointsDataset, transform
 MSE = torch.nn.MSELoss()
 bceLoss = nn.BCELoss
 
-os.environ["CUDA_VISIBLE_DEVICES"]="3"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 def forward(sample_batched, model):
     img, gt_gauss = sample_batched
@@ -49,9 +49,11 @@ def fit(train_data, test_data, model, epochs, checkpoint_path = ''):
 
 # dataset
 workers=0
-dataset_dir = 'black_out_simple'
+raid_dir = 'train_sets'
+dir_name = 'two_hairties_ep_5'
+dataset_dir = raid_dir + '/' + dir_name
 output_dir = 'checkpoints'
-save_dir = os.path.join(output_dir, dataset_dir+'_GAUSS_KPTS_ONLY')
+save_dir = os.path.join(output_dir, dir_name +'_GAUSS_KPTS_ONLY')
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
