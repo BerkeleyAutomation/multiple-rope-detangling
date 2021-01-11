@@ -9,7 +9,8 @@ class KeypointsAnnotator:
     def load_image(self, img):
         self.img = img
         # self.click_to_kpt = {0:"R", 1:"PULL", 2:"PIN", 3:"L"}
-        self.click_to_kpt = {0:"PIN", 1:"PULL"}
+        # self.click_to_kpt = {0:"1", 1:"2", 2:"3", 3:"4"}
+        self.click_to_kpt = {0:"EP", 1:"PIN", 2:"PULL"}
 
     def mouse_callback(self, event, x, y, flags, param):
         cv2.imshow("pixel_selector", self.img)
@@ -26,7 +27,7 @@ class KeypointsAnnotator:
         cv2.setMouseCallback('pixel_selector', self.mouse_callback)
         while True:
             k = cv2.waitKey(20) & 0xFF
-            if k == 27 or len(self.clicks) == 2:
+            if k == 27 or len(self.clicks) == 3:
                 break
             if cv2.waitKey(33) == ord('r'):
                 self.clicks = []
@@ -41,11 +42,11 @@ if __name__ == '__main__':
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_fabric_resized'
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_resized'
 
-    image_dir = './test_results/two_hairties_endpoint_preds/preds' # Should have images like 00000.jpg, 00001.jpg, ...
+    image_dir = './rollouts5' # Should have images like 00000.jpg, 00001.jpg, ...
     output_dir = './real_data' # Will have real_data/images and real_data/keypoints
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
-    keypoints_output_dir = os.path.join(output_dir, 'keypoints')
+    keypoints_output_dir = os.path.join(output_dir, 'annots')
     images_output_dir = os.path.join(output_dir, 'images')
     if not os.path.exists(keypoints_output_dir):
         os.mkdir(keypoints_output_dir)

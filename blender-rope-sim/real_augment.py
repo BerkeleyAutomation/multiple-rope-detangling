@@ -144,7 +144,7 @@ if __name__ == '__main__':
     idx = len(os.listdir(img_dir))
     #idx = 0
     orig_len = len(os.listdir(img_dir))
-    num_augs_per = 10
+    num_augs_per = 20 #10
     mode = 'kpt'
     output_dir_annots = keypoints_dir if mode =='kpt' else bbox_dir
     if mode == 'bbox':
