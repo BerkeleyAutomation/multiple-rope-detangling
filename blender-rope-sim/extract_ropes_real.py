@@ -14,10 +14,20 @@ def extract_rope(img, filename):
 def red_rope(image, filename):
 	#blurring and smoothin
 	hsv = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+	
+	#ORIGINAL
+	# #lower red
+	# lower_red = np.array([0,50,50])
+	# upper_red = np.array([10,255,255])
 
+	# #upper red
+	# lower_red2 = np.array([170,50,50])
+	# upper_red2 = np.array([180,255,255])
+
+	#HOME
 	#lower red
 	lower_red = np.array([0,50,50])
-	upper_red = np.array([10,255,255])
+	upper_red = np.array([5,255,255])
 
 	#upper red
 	lower_red2 = np.array([170,50,50])
@@ -25,7 +35,6 @@ def red_rope(image, filename):
 
 	mask = cv2.inRange(hsv, lower_red, upper_red)
 	res = cv2.bitwise_and(image, image, mask= mask)
-
 
 	mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
 	res2 = cv2.bitwise_and(image, image, mask= mask2)
@@ -85,13 +94,11 @@ def shadow_mask_red(img, filename):
 
 
 if __name__ == '__main__':
-	folder = './real_images/two_hairties_resized'
+	folder = './real_images/iphone_horizontal'
 	shadows = './real_images/two_hairties_shadows'
 	output_folder = folder + '_extract'
 	if not os.path.exists(output_folder):
 		os.mkdir(output_folder)
-	if not os.path.exists(shadows):
-		os.mkdir(shadows)
 	for f in os.listdir(folder):
 		if f != '.DS_Store':
 			img = cv2.imread(os.path.join(folder, f))
@@ -99,7 +106,7 @@ if __name__ == '__main__':
 			file = splits[0]
 			num = int(file)
 			print(num)
-			filename = 'color%d.png'%(num + len(os.listdir(folder)))
+			filename = '%05d.png'%(num + len(os.listdir(folder)))
 			red_rope(img, os.path.join(output_folder, filename))
 			white_rope(img, os.path.join(output_folder, f))
 

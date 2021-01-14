@@ -10,7 +10,7 @@ import colorsys
 def show_kpts(idx, image_dir):
     image_filename = "{0:05d}.png".format(idx)
     print(image_filename)
-    img = cv2.imread('train_sets/multiple_real_2/test/blacked_out/{}'.format(image_filename))
+    img = cv2.imread('images/{}'.format(image_filename))
     vis = img.copy()
     kpts = np.load('%s/%05d.npy'%(image_dir, idx))
     kpts = np.reshape(kpts, (4,2))
@@ -24,7 +24,7 @@ def show_kpts(idx, image_dir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--dir', type=str, default='train_sets/multiple_real_2/test/keypoints')
+    parser.add_argument('-d', '--dir', type=str, default='keypoints')
     args = parser.parse_args()
     print(args)
     if not os.path.exists("./annotated"):
