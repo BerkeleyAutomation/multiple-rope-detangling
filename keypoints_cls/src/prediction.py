@@ -78,8 +78,8 @@ class Prediction:
         tmp = self.expectation(h)
         pred_y, pred_x = np.unravel_index(h.argmax(), h.shape)
             #if pred_x > max_x and pred_y < min_y:
-            #    max_x = pred_x
-            #    min_y = pred_y 
+        max_x = pred_x
+        min_y = pred_y 
         heat = h
         vis = cv2.normalize(heat, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
         vis = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
