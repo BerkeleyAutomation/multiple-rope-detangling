@@ -13,22 +13,22 @@ from datetime import datetime
 import imgaug.augmenters as iaa
 
 # No domain randomization
-#transform = transforms.Compose([transforms.ToTensor()])
+transform = transforms.Compose([transforms.ToTensor()])
 
 # Domain randomization
-transform = transforms.Compose([
-    iaa.Sequential([
-        iaa.AddToHueAndSaturation((-20, 20)),
-        iaa.LinearContrast((0.85, 1.2), per_channel=0.25), 
-        iaa.Add((-10, 30), per_channel=True),
-        iaa.GammaContrast((0.85, 1.2)),
-        iaa.GaussianBlur(sigma=(0.0, 0.6)),
-        iaa.ChangeColorTemperature((5000,35000)),
-        iaa.MultiplySaturation((0.95, 1.05)),
-        iaa.AdditiveGaussianNoise(scale=(0, 0.0125*255)),
-    ], random_order=True).augment_image,
-    transforms.ToTensor()
-])
+#transform = transforms.Compose([
+#    iaa.Sequential([
+#        iaa.AddToHueAndSaturation((-20, 20)),
+#        iaa.LinearContrast((0.85, 1.2), per_channel=0.25), 
+#        iaa.Add((-10, 30), per_channel=True),
+#        iaa.GammaContrast((0.85, 1.2)),
+#        iaa.GaussianBlur(sigma=(0.0, 0.6)),
+#        iaa.ChangeColorTemperature((5000,35000)),
+#        iaa.MultiplySaturation((0.95, 1.05)),
+#        iaa.AdditiveGaussianNoise(scale=(0, 0.0125*255)),
+#    ], random_order=True).augment_image,
+#    transforms.ToTensor()
+#])
 
 def normalize(x):
     return F.normalize(x, p=1)
@@ -61,20 +61,20 @@ class KeypointsDataset(Dataset):
         self.labels = []
         for i in range(len(os.listdir(labels_folder))):
             #label = np.load(os.path.join(labels_folder, '%05d.npy'%i))[:-2].reshape(num_keypoints, 2)
-            print(i)
-            label = np.load(os.path.join(labels_folder, '%05d.npy'%i)).reshape(num_keypoints, 2)
-            label[:,0] = np.clip(label[:, 0], 0, self.img_width-1)
-            label[:,1] = np.clip(label[:, 1], 0, self.img_height-1)
+            label = np.load(os.path.join(labels_folder, '%05d.npy'%i)).reshape(num_keypoints)
+           # label[:,0] = np.clip(label[:, 0], 0, self.img_width-1)
+           # label[:,1] = np.clip(label[:, 1], 0, self.img_height-1)
             self.imgs.append(os.path.join(img_folder, '%05d.png'%i))
             self.labels.append(torch.from_numpy(label).cuda())
 
     def __getitem__(self, index):  
         img = self.transform(cv2.imread(self.imgs[index]))
         labels = self.labels[index]
-        U = labels[:,0]
-        V = labels[:,1]
-        gaussians = gauss_2d_batch(self.img_width, self.img_height, self.gauss_sigma, U, V)
-        return img, gaussians
+        label = labels[0]
+	#U = labels[:,0]
+        #V = labels[:,1]
+        #gaussians = gauss_2d_batch(self.img_width, self.img_height, self.gauss_sigma, labels[0])
+        return img, labels
     
     def __len__(self):
         return len(self.labels)

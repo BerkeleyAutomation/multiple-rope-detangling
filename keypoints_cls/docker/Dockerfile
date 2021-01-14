@@ -26,14 +26,14 @@ RUN pip3 install --no-cache-dir --upgrade pip setuptools && \
 
 RUN pip install --upgrade pip && \
     pip install \
-        torch==1.1.0 \
+        torch==1.2.0 \
         opencv_python==3.4.2.17 \
         numpy \
-        torchvision==0.2.0 \
+        torchvision==0.4.0 \
         Cython \
-        matplotlib 
+        matplotlib
 
-RUN apt-get install -y libsm6 libxext6 libxrender-dev
+RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev
 
 RUN pip install imgaug
 
