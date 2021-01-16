@@ -17,7 +17,7 @@ import torchvision.models as models
 # model
 keypoints = models.resnet34(pretrained=False, num_classes=1).cuda() 
 #keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/end_condition/model_2_1_20_0.005372296337459399.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/termination_mask/model_2_1_4_0.1987624940857064.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -31,7 +31,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/real_images/rollouts7'
+image_dir = 'data/train_sets/termination_mask/test/images'
 
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
