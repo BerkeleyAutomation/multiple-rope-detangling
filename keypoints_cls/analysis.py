@@ -30,7 +30,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-data_dir = "train_sets/pin_pull_cond/test"
+data_dir = "real_images/real_color_rope_cond"
 test_dataset = KeypointsDataset('data/%s/images'%data_dir,
                            'data/%s/annots'%data_dir, NUM_KEYPOINTS, IMG_HEIGHT, IMG_WIDTH, transform, gauss_sigma=GAUSS_SIGMA)
 test_data = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=0)
