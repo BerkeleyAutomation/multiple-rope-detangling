@@ -14,9 +14,11 @@ class Resnet34_8s(nn.Module):
                                        remove_avg_pool_layer=True)
         
         # Randomly initialize the 1x1 Conv scoring layer
-        resnet34_8s.fc = nn.Conv2d(resnet34_8s.inplanes, num_classes, 1)
-        self.resnet34_8s = resnet34_8s
-        self._normal_initialization(self.resnet34_8s.fc)
+        #resnet34_8s.fc = nn.Conv2d(resnet34_8s.inplanes, num_classes, 1)
+        self.resnet34_8s = models.resnet34(pretrained=pretrained, num_classes=num_classes)
+        self.resnet34_8s.conv1 = nn.Conv2d(channels, 64, kernel_size=(7,7), stride=(2,2), padding=(3,3), bias=False)
+        #self.resnet34_8s = resnet34_8s
+        #self._normal_initialization(self.resnet34_8s.fc)
         
     def _normal_initialization(self, layer):
         layer.weight.data.normal_(0, 0.01)

@@ -38,6 +38,23 @@ class Prediction:
         exp_val = [int(np.dot(d_norm, x_indices)), int(np.dot(d_norm, y_indices))]
         return exp_val
     
+    def sort(self, input, prediction, image_id=0, cls=None, classes=None):
+        input = np.transpose(input[0], (1,2,0))
+        img = input[:, :, :3] * 255
+        img = img.astype(np.uint8)
+        print("Running inferences on image: %d"%image_id)
+        h = input[:,:, 3]
+        pred_y, pred_x = np.unravel_index(h.argmax(), h.shape)
+        vis = cv2.normalize(h, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+        vis = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
+        overlay = cv2.addWeighted(img, 0.65, vis, 0.35, 0)
+        overlay = cv2.circle(overlay, (pred_x,pred_y), 4, (0,0,0), -1)
+        print(prediction)
+        if prediction < 0.5:
+            cv2.imwrite('not_done/%05d.png'%image_id, overlay)
+        else:
+            cv2.imwrite('done/%05d.png'%image_id, overlay)
+
     def plot(self, input, heatmap, image_id=0, cls=None, classes=None):
         input = np.transpose(input[0], (1,2,0))
         img = input[:, :, :3] * 255

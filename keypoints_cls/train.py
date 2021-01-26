@@ -8,21 +8,26 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from config import *
+from src.model2 import Resnet4Channel
 from src.model import KeypointsGauss
 from src.dataset import KeypointsDataset, transform
+import torchvision.models as models
+from resnet_dilated import Resnet34_8s
 MSE = torch.nn.MSELoss()
 bceLoss = nn.BCELoss
 
 os.environ["CUDA_VISIBLE_DEVICES"]="3"
 
 def forward(sample_batched, model):
-    img, gt_gauss = sample_batched
+    img, gt_label = sample_batched
     img = Variable(img.cuda() if use_cuda else img)
-    pred_gauss = model.forward(img).double()
+    pred_label = model.forward(img).double()
     #pred_gauss = pred_gauss.view(pred_gauss.shape[0], 4, 640*480).double()
-    #gt_gauss += 1e-300
+    gt_label += 1e-300
+    gt_label = gt_label.double()
     #loss = F.kl_div(gt_gauss.cuda().log(), pred_gauss, None, None, 'mean')
-    loss = nn.BCELoss()(pred_gauss, gt_gauss)
+    loss = F.binary_cross_entropy(pred_label, gt_label)
+    #loss = nn.CrossEntropyLoss()(pred_label, gt_label)
     return loss
 
 def fit(train_data, test_data, model, epochs, checkpoint_path = ''):
@@ -45,12 +50,12 @@ def fit(train_data, test_data, model, epochs, checkpoint_path = ''):
             test_loss += loss.item()
         print('test loss:', test_loss / i_batch)
         if epoch%2 == 0:
-            torch.save(keypoints.state_dict(), checkpoint_path + '/model_2_1_' + str(epoch) + '_' + str(test_loss) + '.pth')
+            torch.save(keypoints.state_dict(), checkpoint_path + '/model_2_1_' + str(epoch) + '_' + str(test_loss/i_batch) + '.pth')
 
 # dataset
 workers=0
 raid_dir = 'train_sets'
-dir_name = 'pin_pull_cond'
+dir_name = 'cond_terminate'
 dataset_dir = raid_dir + '/' + dir_name
 output_dir = 'checkpoints'
 save_dir = os.path.join(output_dir, dir_name)
@@ -75,7 +80,10 @@ if use_cuda:
     torch.cuda.set_device(0)
 
 # model
-keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH).cuda()
+keypoints = Resnet4Channel(num_classes=1, num_channels=4, pretrained=False).cuda()
+#keypoints = models.resnet34(pretrained=False, num_classes=1).cuda()
+#keypoints.conv1 = nn.Conv2d(4, 64, kernel_size=(7,7), stride=(2,2), padding=(3,3), bias=False).cuda()
+#keypoints = Resnet34_8s(num_classes=1, channels=4, pretrained=False).cuda()
 
 # optimizer
 optimizer = optim.Adam(keypoints.parameters(), lr=1.0e-4, weight_decay=1.0e-4)

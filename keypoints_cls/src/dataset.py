@@ -61,7 +61,6 @@ class KeypointsDataset(Dataset):
         self.imgs = []
         self.labels = []
         for i in range(len(os.listdir(labels_folder))):
-            print(i)
 	    #label = np.load(os.path.join(labels_folder, '%05d.npy'%i))[:-2].reshape(num_keypoints, 2)
             label = np.load(os.path.join(labels_folder, '%05d.npy'%i)).reshape(num_keypoints+1, 2)
             label[:,0] = np.clip(label[:, 0], 0, self.img_width-1)
@@ -72,14 +71,13 @@ class KeypointsDataset(Dataset):
     def __getitem__(self, index):
         img = self.transform(cv2.imread(self.imgs[index]))
         labels = self.labels[index]
-        U = labels[1:,0]
-        V = labels[1:,1]
+        label = labels[1][0]
+        label = label.unsqueeze(0)
         given = labels[0]
         given_gauss = gauss_2d_batch(self.img_width, self.img_height, self.gauss_sigma, given[0], given[1], single=True)
         given_gauss = torch.unsqueeze(given_gauss, 0).cuda()
         combined = torch.cat((img.cuda().double(), given_gauss), dim=0).float()
-        gaussians = gauss_2d_batch(self.img_width, self.img_height, self.gauss_sigma, U, V)
-        return combined, gaussians
+        return combined, label
 
     def __len__(self):
         return len(self.labels)
