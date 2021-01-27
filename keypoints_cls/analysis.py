@@ -16,7 +16,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/pin_pull_cond/model_2_1_20_1.0745345978068772.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/cond_pp/model_2_1_20_0.8537989988822913.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -30,7 +30,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-data_dir = "real_images/real_color_rope_cond"
+data_dir = "train_sets/cond_pp/test"
 test_dataset = KeypointsDataset('data/%s/images'%data_dir,
                            'data/%s/annots'%data_dir, NUM_KEYPOINTS, IMG_HEIGHT, IMG_WIDTH, transform, gauss_sigma=GAUSS_SIGMA)
 test_data = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=0)
