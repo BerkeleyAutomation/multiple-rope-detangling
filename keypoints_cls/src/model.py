@@ -14,11 +14,12 @@ class KeypointsGauss(nn.Module):
 		self.num_outputs = self.num_keypoints
 		self.img_height = img_height
 		self.img_width = img_width
-		self.resnet = Resnet34_8s()
+		self.resnet = models.resnet34(pretrained=False, num_classes=1)
+                #self.resnet = Resnet34_8s()
 		self.sigmoid = torch.nn.Sigmoid()
 	def forward(self, x):
 		output = self.resnet(x) 
-		heatmaps = self.sigmoid(output[:,:self.num_keypoints, :, :])
+		heatmaps = self.sigmoid(output)
 		return heatmaps
 
 if __name__ == '__main__':
