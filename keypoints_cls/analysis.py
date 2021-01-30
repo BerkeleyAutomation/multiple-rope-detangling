@@ -18,7 +18,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 # model
 keypoints = Resnet4Channel(num_classes=1, num_channels=4, pretrained=False).cuda()
 #keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/cond_terminate/model_2_1_4_0.45560482039593053.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/cond_terminate2/model_2_1_2_0.18927722024849733.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -32,7 +32,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-data_dir = "train_sets/cond_terminate/test"
+data_dir = "train_sets/cond_terminate2/test"
 test_dataset = KeypointsDataset('data/%s/images'%data_dir,
                            'data/%s/annots'%data_dir, NUM_KEYPOINTS, IMG_HEIGHT, IMG_WIDTH, transform, gauss_sigma=GAUSS_SIGMA)
 test_data = DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=0)

@@ -49,7 +49,6 @@ class Prediction:
         vis = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
         overlay = cv2.addWeighted(img, 0.65, vis, 0.35, 0)
         overlay = cv2.circle(overlay, (pred_x,pred_y), 4, (0,0,0), -1)
-        print(prediction)
         if prediction < 0.5:
             cv2.imwrite('not_done/%05d.png'%image_id, overlay)
         else:
