@@ -5,7 +5,7 @@ import torch
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from config import *
-from src.model import KeypointsGauss
+from src.model import Model
 #from src.model_multi_headed import KeypointsGauss
 from src.dataset import KeypointsDataset, transform
 from src.prediction import Prediction
@@ -15,9 +15,10 @@ import numpy as np
 import torchvision.models as models
 
 # model
-keypoints = models.resnet34(pretrained=False, num_classes=1).cuda() 
+#keypoints = models.resnet34(pretrained=False, num_classes=1).cuda()
+keypoints = Model(NUM_KEYPOINTS, pretrained=False, num_classes=1).cuda() 
 #keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/termination_mask/model_2_1_4_0.1987624940857064.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/terminate_clean/model_2_1_16_0.0035182096723257016.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -31,7 +32,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/train_sets/termination_mask/test/images'
+image_dir = 'data/train_sets/terminate_clean/test/images'
 
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):

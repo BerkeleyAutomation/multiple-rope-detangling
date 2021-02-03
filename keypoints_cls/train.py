@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from config import *
-from src.model import KeypointsGauss
+from src.model import Model
 from src.dataset import KeypointsDataset, transform
 from src.resnet import resnet34
 import torchvision.models as models
@@ -54,7 +54,7 @@ def fit(train_data, test_data, model, epochs, checkpoint_path = ''):
 # dataset
 workers=0
 raid_dir = 'train_sets'
-dir_name = 'termination_mask'
+dir_name = 'terminate_clean'
 dataset_dir = raid_dir + '/' + dir_name
 output_dir = 'checkpoints'
 save_dir = os.path.join(output_dir, dir_name)
@@ -79,7 +79,8 @@ if use_cuda:
     torch.cuda.set_device(0)
 
 # model
-keypoints = models.resnet34(pretrained=False, num_classes=1).cuda()
+#keypoints = models.resnet34(pretrained=False, num_classes=1).cuda()
+keypoints = Model(NUM_KEYPOINTS, pretrained=False, num_classes=1).cuda()
 #keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH).cuda()
 
 # optimizer
