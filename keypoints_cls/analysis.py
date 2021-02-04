@@ -17,7 +17,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/reid_two_rope/model_2_1_2_0.0037880240282035862.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/reid_two_rope/model_2_1_2_0.0035196005673935327.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
