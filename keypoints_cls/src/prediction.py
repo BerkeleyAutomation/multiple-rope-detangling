@@ -77,17 +77,15 @@ class Prediction:
         h = heatmap[0][i]
         tmp = self.expectation(h)
         pred_y, pred_x = np.unravel_index(h.argmax(), h.shape)
-            #if pred_x > max_x and pred_y < min_y:
-        max_x = pred_x
-        min_y = pred_y 
         heat = h
         vis = cv2.normalize(heat, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
         vis = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
         result = cv2.addWeighted(img, 0.65, vis, 0.35, 0)
-        result = cv2.circle(result, (max_x,min_y), 4, (0,0,0), -1)
+        result = cv2.circle(result, (pred_x,pred_y), 4, (0,0,0), -1)
         if cls is not None:
             label = classes[cls]
             cv2.putText(result, label, (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.imwrite('preds/%05d.png'%image_id, result)
-        image = np.dstack((img, heat))
-        np.save('preds_4c/%05d.npy'%image_id, image)
+        #image = np.dstack((img, heat))
+        keypoints = np.array([[max_x, min_y],[0,0], [0,0]])
+        np.save('keypoints/%05d.npy'%image_id, keypoints)
