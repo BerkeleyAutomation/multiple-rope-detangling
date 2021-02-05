@@ -69,8 +69,6 @@ class Prediction:
     def plot_one_endpoint(self, img, heatmap, image_id=0, cls=None, classes=None):
         print("Running inferences on image: %d"%image_id)
         all_overlays = []
-        max_x = 0
-        min_y = 480
         heat = heatmap[0][0]
         i = np.random.randint(0, high=self.num_keypoints)
         #for i in range(self.num_keypoints):
@@ -87,5 +85,5 @@ class Prediction:
             cv2.putText(result, label, (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.imwrite('preds/%05d.png'%image_id, result)
         #image = np.dstack((img, heat))
-        keypoints = np.array([[max_x, min_y],[0,0], [0,0]])
+        keypoints = np.array([[pred_x, pred_y],[0,0], [0,0]])
         np.save('keypoints/%05d.npy'%image_id, keypoints)
