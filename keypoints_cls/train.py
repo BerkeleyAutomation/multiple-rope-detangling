@@ -15,7 +15,7 @@ import torchvision.models as models
 MSE = torch.nn.MSELoss()
 bceLoss = nn.BCELoss
 
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 def forward(sample_batched, model):
     img, gt_label = sample_batched
@@ -54,7 +54,7 @@ def fit(train_data, test_data, model, epochs, checkpoint_path = ''):
 # dataset
 workers=0
 raid_dir = 'train_sets'
-dir_name = 'terminate_clean'
+dir_name = 'terminate_zoom'
 dataset_dir = raid_dir + '/' + dir_name
 output_dir = 'checkpoints'
 save_dir = os.path.join(output_dir, dir_name)
