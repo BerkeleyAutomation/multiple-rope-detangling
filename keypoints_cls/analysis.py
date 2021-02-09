@@ -33,7 +33,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/train_sets/reid_zoom/test/images'
+image_dir = 'data/real_images/two_rope_test_crop2'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
     img = cv2.imread(os.path.join(image_dir, f))
@@ -44,8 +44,8 @@ for i, f in enumerate(sorted(os.listdir(image_dir))):
     # GAUSS
     heatmap = prediction.predict(img_t)
     heatmap = heatmap.detach().cpu().numpy()
-    prediction.plot(img, heatmap, image_id=i)
-    #prediction.plot_one_endpoint(img, heatmap, image_id=i)
+    #prediction.plot(img, heatmap, image_id=i)
+    prediction.plot_one_endpoint(img, heatmap, image_id=i)
 
     #heatmap, cls = prediction.predict(img_t)
     #cls = torch.argmax(cls).item()
