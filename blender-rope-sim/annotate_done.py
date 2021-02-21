@@ -8,17 +8,21 @@ class KeypointsAnnotator:
 
     def load_image(self, img):
         self.img = img
-        # self.click_to_kpt = {0:"R", 1:"PIN", 2:"PULL", 3:"L"}
+        # self.click_to_kpt = {0:"R", 1:"PULL", 2:"PIN", 3:"L"}
+        # self.click_to_kpt = {0:"1", 1:"2", 2:"3", 3:"4"}
         # self.click_to_kpt = {0:"EP", 1:"PIN", 2:"PULL"}
-        # self.click_to_kpt = {0:"R", 1:"L"}
-        self.click_to_kpt = {0:"PIN", 1:"PULL"}
+        self.click_to_kpt = {0:"DONE"}
 
     def mouse_callback(self, event, x, y, flags, param):
         cv2.imshow("pixel_selector", self.img)
         if event == cv2.EVENT_LBUTTONDBLCLK:
             cv2.putText(img, self.click_to_kpt[len(self.clicks)], (x,y-30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255),2)
-            self.clicks.append([x, y])
-            print(x, y)
+            if x > 320:
+                self.clicks.append([1])
+                print('done')
+            else:
+                self.clicks.append([0])
+                print('not done')
             cv2.circle(self.img, (x, y), 3, (255, 0, 0), -1)
 
     def run(self, img):
@@ -28,7 +32,7 @@ class KeypointsAnnotator:
         cv2.setMouseCallback('pixel_selector', self.mouse_callback)
         while True:
             k = cv2.waitKey(20) & 0xFF
-            if k == 27 or len(self.clicks) == 2:
+            if k == 27 or len(self.clicks) == 1:
                 break
             if cv2.waitKey(33) == ord('r'):
                 self.clicks = []
@@ -43,7 +47,7 @@ if __name__ == '__main__':
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_fabric_resized'
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_resized'
 
-    image_dir = './real_images/no_mask/hulk_two_rope_train' # Should have images like 00000.jpg, 00001.jpg, ...
+    image_dir = './real_images/masked/train_term2' # Should have images like 00000.jpg, 00001.jpg, ...
     output_dir = './real_data' # Will have real_data/images and real_data/keypoints
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)

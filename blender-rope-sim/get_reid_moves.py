@@ -43,7 +43,7 @@ def get_reid_moves(idx, kp_dir):
 	print(right_ep)
 	print(left_ep)
 	right_ep.extend(left_ep)
-	return np.reshape(right_ep, (2,2))
+	return np.reshape(right_ep, (2,2)) #order is right endpoint first, then left endpoint
 
 def check_red(pixel, img):
 	hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)

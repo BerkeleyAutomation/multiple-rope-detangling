@@ -17,42 +17,20 @@ KPT_AUGS = [
     iaa.GammaContrast((0.95, 1.05)),
     iaa.GaussianBlur(sigma=(0.0, 0.6)),
     iaa.MultiplySaturation((0.95, 1.05)),
-    # iaa.AddToHueAndSaturation((-255, 255)), 
-    # iaa.ChangeColorTemperature((1000,20000)), 
+    iaa.AddToHueAndSaturation((-255, 255)), 
+    iaa.ChangeColorTemperature((1000,20000)), 
     iaa.AdditiveGaussianNoise(scale=(0, 0.0125*255)),
     iaa.flip.Flipud(0.5),
     sometimes(iaa.Affine(
                 scale={"x": (0.8, 1.2), "y": (0.8, 1.2)}, # scale images to 80-120% of their size, individually per axis
-                translate_percent={"x": (-0.10, 0.10), "y": (-0.1, 0.1)}, # translate by -20 to +20 percent (per axis)
+                translate_percent={"x": (-0.25, 0.25), "y": (-0.2, 0.2)}, # translate by -20 to +20 percent (per axis)
                 rotate=(-30, 30), # rotate by -45 to +45 degrees
                 shear=(-10, 10), # shear by -16 to +16 degrees
                 order=[0, 1], # use nearest neighbour or bilinear interpolation (fast)
-                cval=(0, 30), # if mode is constant, use a cval between 0 and 255
+                cval=(100, 100), # if mode is constant, use a cval between 0 and 255
                 mode=ia.ALL # use any of scikit-image's warping modes (see 2nd image from the top for examples)
             ))
     ]
-
-# Uncomment for RGB
-#KPT_AUGS = [ 
-#    iaa.AddToHueAndSaturation((-20, 20)),
-#    iaa.LinearContrast((0.95, 1.05), per_channel=0.25), 
-#    iaa.Add((-10, 10), per_channel=True),
-#    iaa.GammaContrast((0.95, 1.05)),
-#    iaa.GaussianBlur(sigma=(0.0, 0.6)),
-#    iaa.ChangeColorTemperature((3000,35000)),
-#    iaa.MultiplySaturation((0.95, 1.05)),
-#    iaa.AdditiveGaussianNoise(scale=(0, 0.0125*255)),
-#    iaa.flip.Flipud(0.5),
-#    sometimes(iaa.Affine(
-#                scale={"x": (0.8, 1.2), "y": (0.8, 1.2)}, # scale images to 80-120% of their size, individually per axis
-#                translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)}, # translate by -20 to +20 percent (per axis)
-#                rotate=(-20, 20), # rotate by -45 to +45 degrees
-#                shear=(-10, 10), # shear by -16 to +16 degrees
-#                order=[0, 1], # use nearest neighbour or bilinear interpolation (fast)
-#                cval=(0, 100), # if mode is constant, use a cval between 0 and 255
-#                mode=ia.ALL # use any of scikit-image's warping modes (see 2nd image from the top for examples)
-#            ))
-#    ]
 
 BBOX_AUGS = KPT_AUGS[:-1] + [
         iaa.flip.Fliplr(0.5),
@@ -114,26 +92,28 @@ def augment(img, keypoints, output_dir_img, output_dir_kpt, new_idx, show=False,
     for i, (u,v) in enumerate(kps_aug):
         (r, g, b) = colorsys.hsv_to_rgb(float(i)/keypoints.shape[0], 1.0, 1.0)
         R, G, B = int(255 * r), int(255 * g), int(255 * b)
-        cv2.circle(vis_img_aug,(u,v),4,(R,G,B), -1)
-    if show:
-        cv2.imshow("img", img_aug)
-        cv2.waitKey(0)
+    #     cv2.circle(vis_img_aug,(u,v),4,(R,G,B), -1)
+    # if show:
+    #     cv2.imshow("img", img_aug)
+    #     cv2.waitKey(0)
 
     cv2.imwrite(os.path.join(output_dir_img, "%05d.png"%new_idx), img_aug)
     if depth_img is not None:
         cv2.imwrite(os.path.join(depth_output_dir_img, "%05d.png"%new_idx), depth_img_aug)
     if mode == 'kpt':
-        np.save(os.path.join(output_dir_kpt, "%05d.npy"%new_idx), kps_aug)
+        kps = np.array([kps_aug[0], keypoints[1]])
+        # print(kps)
+        np.save(os.path.join(output_dir_kpt, "%05d.npy"%new_idx), kps)
     else: # BBOX
         process_bbox_annots(os.path.join(output_dir_kpt, "%05d.xml"%new_idx), kps_aug)
     
 
 if __name__ == '__main__':
-    # if not os.path.exists("./annots"):
-    #     os.mkdir('./annots')
-    # else:
-    #     os.system('rm -r ./annots')
-    #     os.mkdir('./annots')
+    if not os.path.exists("./annots"):
+        os.mkdir('./annots')
+    else:
+        os.system('rm -r ./annots')
+        os.mkdir('./annots')
     keypoints_dir = 'keypoints'
     bbox_dir = 'annots'
 
@@ -146,7 +126,7 @@ if __name__ == '__main__':
     idx = len(os.listdir(img_dir))
     #idx = 0
     orig_len = len(os.listdir(img_dir))
-    num_augs_per = 25 #20
+    num_augs_per = 8 #25
     mode = 'kpt'
     output_dir_annots = keypoints_dir if mode =='kpt' else bbox_dir
     if mode == 'bbox':
