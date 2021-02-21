@@ -61,7 +61,6 @@ class KeypointsDataset(Dataset):
         self.labels = []
         for i in range(len(os.listdir(labels_folder))):
             #label = np.load(os.path.join(labels_folder, '%05d.npy'%i))[:-2].reshape(num_keypoints, 2)
-            print(i)
             label = np.load(os.path.join(labels_folder, '%05d.npy'%i)).reshape(num_keypoints, 2)
             label[:,0] = np.clip(label[:, 0], 0, self.img_width-1)
             label[:,1] = np.clip(label[:, 1], 0, self.img_height-1)

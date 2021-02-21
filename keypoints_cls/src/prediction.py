@@ -69,30 +69,21 @@ class Prediction:
     def plot_one_endpoint(self, img, heatmap, image_id=0, cls=None, classes=None):
         print("Running inferences on image: %d"%image_id)
         all_overlays = []
-        max_x = 0
-        min_y = 480
         heat = heatmap[0][0]
-        #i = np.random.randint(0, high=self.num_keypoints)
-        for i in range(self.num_keypoints):
-            h = heatmap[0][i]
-            tmp = self.expectation(h)
-            pred_y, pred_x = np.unravel_index(h.argmax(), h.shape)
-            if pred_x > max_x and pred_y < min_y:
-                max_x = pred_x
-                min_y = pred_y 
-                heat = h
+        i = np.random.randint(0, high=self.num_keypoints)
+        #for i in range(self.num_keypoints):
+        h = heatmap[0][i]
+        tmp = self.expectation(h)
+        pred_y, pred_x = np.unravel_index(h.argmax(), h.shape)
+        heat = h
         vis = cv2.normalize(heat, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
         vis = cv2.applyColorMap(vis, cv2.COLORMAP_JET)
         result = cv2.addWeighted(img, 0.65, vis, 0.35, 0)
-        result = cv2.circle(result, (max_x,min_y), 4, (0,0,0), -1)
-        #all_overlays.append(overlay)
-        #result1 = cv2.vconcat(all_overlays[:self.num_keypoints//2])
-        #result2 = cv2.vconcat(all_overlays[self.num_keypoints//2:])
-        #result = cv2.hconcat((result1, result2))
-        #cv2.putText(result)
+        result = cv2.circle(result, (pred_x,pred_y), 4, (0,0,0), -1)
         if cls is not None:
             label = classes[cls]
             cv2.putText(result, label, (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.imwrite('preds/%05d.png'%image_id, result)
-        image = np.dstack((img, heat))
-        np.save('preds_4c/%05d.npy'%image_id, image)
+        #image = np.dstack((img, heat))
+        keypoints = np.array([[pred_x, pred_y],[0,0], [0,0]])
+        np.save('keypoints/%05d.npy'%image_id, keypoints)

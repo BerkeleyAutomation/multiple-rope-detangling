@@ -17,7 +17,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/two_hairties_ep_5_GAUSS_KPTS_ONLY/model_2_1_6_0.003261065595419683.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/hulk_zoom/model_2_1_2_0.0041632937620994.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -33,7 +33,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/train_sets/two_hairties_pp_right_5/train/images'
+image_dir = 'data/train_sets/hulk_zoom/test/images'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
     img = cv2.imread(os.path.join(image_dir, f))
@@ -44,8 +44,9 @@ for i, f in enumerate(sorted(os.listdir(image_dir))):
     # GAUSS
     heatmap = prediction.predict(img_t)
     heatmap = heatmap.detach().cpu().numpy()
-    prediction.plot_one_endpoint(img, heatmap, image_id=i)
- 
+    prediction.plot(img, heatmap, image_id=i)
+    #prediction.plot_one_endpoint(img, heatmap, image_id=i)
+
     #heatmap, cls = prediction.predict(img_t)
     #cls = torch.argmax(cls).item()
     #heatmap = heatmap.detach().cpu().numpy()
