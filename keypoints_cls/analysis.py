@@ -17,7 +17,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 # model
 keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/reid_no_color/model_2_1_4_0.0031935330109069634.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/two_rope_hulk/model_2_1_2_0.004251976175982303.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -33,7 +33,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/train_sets/reid_no_color/test/images'
+image_dir = 'data/train_sets/two_rope_hulk/test/images'
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
     img = cv2.imread(os.path.join(image_dir, f))
