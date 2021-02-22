@@ -8,6 +8,8 @@ import cv2
 import imgaug as ia
 from imgaug import augmenters as iaa
 from imgaug.augmentables import Keypoint, KeypointsOnImage
+import tensorflow_datasets as tfds
+import tensorflow as tf
 
 sometimes = lambda aug: iaa.Sometimes(0.5, aug)
 
@@ -101,9 +103,22 @@ def process_bbox_annots(annot_filepath, kps_aug):
         annot_list.append([min_x, min_y, max_x, max_y])
     create_labimg_xml(annot_filepath, annot_list)
 
+# def augment(img, keypoints, output_dir_img, output_dir_kpt, new_idx, show=False, mode='kpt', depth_img=None, depth_output_dir_img=None):
+#     image = img.copy()
+#     image = tf.cast(image, tf.float32)
+#     image = tf.image.resize(image, [640, 480])
+#     image = image / 255.0
+#     image = tf.image.random_crop(image, size=[640, 480, 3])
+#     image = tf.image.random_brightness(image, max_delta=0.5)
+
+#     cv2.imwrite(os.path.join(output_dir_img, "%05d.png"%new_idx), image)
+#     if mode == 'kpt':
+#         np.save(os.path.join(output_dir_kpt, "%05d.npy"%new_idx), keypoints)
+
+
 def augment(img, keypoints, output_dir_img, output_dir_kpt, new_idx, show=False, mode='kpt', depth_img=None, depth_output_dir_img=None):
     seq = seq_kpts if mode=='kpt' else seq_bbox
-    kps = [Keypoint(x, y) for x, y in keypoints]
+    kps = [Keypoint(x,0) for x in keypoints]
     kps = KeypointsOnImage(kps, shape=img.shape)
     img_aug, kps_aug = seq(image=img, keypoints=kps)
     #seq = seq.to_deterministic()
@@ -111,29 +126,29 @@ def augment(img, keypoints, output_dir_img, output_dir_kpt, new_idx, show=False,
     vis_img_aug = img_aug.copy()
     kps_aug = kps_aug.to_xy_array().astype(int)
     
-    for i, (u,v) in enumerate(kps_aug):
+    for i, (u) in enumerate(kps_aug):
         (r, g, b) = colorsys.hsv_to_rgb(float(i)/keypoints.shape[0], 1.0, 1.0)
         R, G, B = int(255 * r), int(255 * g), int(255 * b)
-        cv2.circle(vis_img_aug,(u,v),4,(R,G,B), -1)
-    if show:
-        cv2.imshow("img", img_aug)
-        cv2.waitKey(0)
+    #     cv2.circle(vis_img_aug,(u,v),4,(R,G,B), -1)
+    # if show:
+    #     cv2.imshow("img", img_aug)
+    #     cv2.waitKey(0)
 
     cv2.imwrite(os.path.join(output_dir_img, "%05d.png"%new_idx), img_aug)
     if depth_img is not None:
         cv2.imwrite(os.path.join(depth_output_dir_img, "%05d.png"%new_idx), depth_img_aug)
     if mode == 'kpt':
-        np.save(os.path.join(output_dir_kpt, "%05d.npy"%new_idx), kps_aug)
+        np.save(os.path.join(output_dir_kpt, "%05d.npy"%new_idx), keypoints)
     else: # BBOX
         process_bbox_annots(os.path.join(output_dir_kpt, "%05d.xml"%new_idx), kps_aug)
     
 
 if __name__ == '__main__':
-    # if not os.path.exists("./annots"):
-    #     os.mkdir('./annots')
-    # else:
-    #     os.system('rm -r ./annots')
-    #     os.mkdir('./annots')
+    if not os.path.exists("./annots"):
+        os.mkdir('./annots')
+    else:
+        os.system('rm -r ./annots')
+        os.mkdir('./annots')
     keypoints_dir = 'keypoints'
     bbox_dir = 'annots'
 
@@ -146,7 +161,7 @@ if __name__ == '__main__':
     idx = len(os.listdir(img_dir))
     #idx = 0
     orig_len = len(os.listdir(img_dir))
-    num_augs_per = 25 #20
+    num_augs_per = 28 #8
     mode = 'kpt'
     output_dir_annots = keypoints_dir if mode =='kpt' else bbox_dir
     if mode == 'bbox':

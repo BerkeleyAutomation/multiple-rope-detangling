@@ -13,7 +13,7 @@ def show_kpts(idx, image_dir):
     img = cv2.imread('images/{}'.format(image_filename))
     vis = img.copy()
     kpts = np.load('%s/%05d.npy'%(image_dir, idx))
-    kpts = np.reshape(kpts, (4,2))
+    kpts = np.reshape(kpts, (2,2))
     for i, (u,v) in enumerate(kpts):    
         (r, g, b) = colorsys.hsv_to_rgb(float(i)/kpts.shape[0], 1.0, 1.0)
         R, G, B = int(255 * r), int(255 * g), int(255 * b)
@@ -24,7 +24,7 @@ def show_kpts(idx, image_dir):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-d', '--dir', type=str, default='keypoints')
+    parser.add_argument('-d', '--dir', type=str, default='annots')
     args = parser.parse_args()
     print(args)
     if not os.path.exists("./annotated"):

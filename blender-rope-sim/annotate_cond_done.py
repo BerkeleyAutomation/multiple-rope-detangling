@@ -8,10 +8,10 @@ class KeypointsAnnotator:
 
     def load_image(self, img):
         self.img = img
-        # self.click_to_kpt = {0:"R", 1:"PIN", 2:"PULL", 3:"L"}
+        # self.click_to_kpt = {0:"R", 1:"PULL", 2:"PIN", 3:"L"}
+        # self.click_to_kpt = {0:"1", 1:"2", 2:"3", 3:"4"}
         # self.click_to_kpt = {0:"EP", 1:"PIN", 2:"PULL"}
-        # self.click_to_kpt = {0:"R", 1:"L"}
-        self.click_to_kpt = {0:"PIN", 1:"PULL"}
+        self.click_to_kpt = {0:"EP", 1:"DONE"}
 
     def mouse_callback(self, event, x, y, flags, param):
         cv2.imshow("pixel_selector", self.img)
@@ -34,6 +34,14 @@ class KeypointsAnnotator:
                 self.clicks = []
                 self.load_image(img)
                 print('Erased annotations for current image')
+        x_done = self.clicks[1][0]
+        if x_done > 320:
+            self.clicks[1] = [1, 0] #it is done
+            print(1)
+        else:
+            self.clicks[1] = [0, 0] #not done 
+            print(0)
+        print(self.clicks)
         return self.clicks
 
 if __name__ == '__main__':
@@ -43,7 +51,7 @@ if __name__ == '__main__':
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_fabric_resized'
     #image_dir = '/Users/priyasundaresan/Downloads/overhead_hairtie_random_resized'
 
-    image_dir = './real_images/no_mask/hulk_two_rope_train' # Should have images like 00000.jpg, 00001.jpg, ...
+    image_dir = './real_images/no_mask/two_rope_test_crop2' # Should have images like 00000.jpg, 00001.jpg, ...
     output_dir = './real_data' # Will have real_data/images and real_data/keypoints
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
