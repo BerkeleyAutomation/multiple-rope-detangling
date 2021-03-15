@@ -20,7 +20,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 #keypoints = models.resnet34(pretrained=False, num_classes=1).cuda()
 keypoints = Model(NUM_KEYPOINTS, pretrained=False, num_classes=1).cuda() 
 #keypoints = KeypointsGauss(NUM_KEYPOINTS, img_height=IMG_HEIGHT, img_width=IMG_WIDTH)
-keypoints.load_state_dict(torch.load('checkpoints/term_two_rope/model_2_1_22_0.12755882890525153.pth'))
+keypoints.load_state_dict(torch.load('checkpoints/term_relaxed/model_2_1_24_0.053154011859655875.pth'))
 
 # cuda
 use_cuda = torch.cuda.is_available()
@@ -34,7 +34,7 @@ transform = transform = transforms.Compose([
     transforms.ToTensor()
 ])
 
-image_dir = 'data/train_sets/term_two_rope/test/images'
+image_dir = 'data/train_sets/term_relaxed/test/images'
 
 classes = {0: "Undo", 1:"Reidemeister", 2:"Terminate"}
 for i, f in enumerate(sorted(os.listdir(image_dir))):
